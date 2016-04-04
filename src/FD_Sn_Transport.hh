@@ -17,18 +17,19 @@ using std::vector;
 class FD_Sn_Transport
 {
 private:
+
+    // Input and output files
     string filename_in_;
     string filename_out_;
-    
-    int max_iterations_;
-    int tolerance_;
-    int p_norm_;
+
+    // Problem size data
     int number_of_boundaries_;
     int number_of_cells_;
     int number_of_edges_;
     int number_of_ordinates_;
     int number_of_regions_;
 
+    // Constant problem data
     vector<double> ordinates_;
     vector<double> weights_;
     vector<double> boundary_source_;
@@ -38,17 +39,23 @@ private:
     vector<double> sigma_s_;
     vector<double> internal_source_;
 
+    // Convergence data
+    int p_norm_;
+    int max_iterations_;
+    double tolerance_;
     bool converged_;
     int total_iterations_;
     double time_;
     vector<double> spectral_radius_;
-    
+
+    // Solution-dependent problem data
     vector<double> phi_;
     vector<double> phi_old_;
     vector<double> psi_average_;
     vector<double> psi_edge_;
     vector<double> source_;
-    
+
+    // Functions
     void parse_xml();
     void write_xml();
     void check_class_invariants();
@@ -62,6 +69,7 @@ private:
     
 public:
 
+    // Creator
     FD_Sn_Transport(string filename_in);
 };
 

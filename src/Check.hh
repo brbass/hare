@@ -3,6 +3,14 @@
 
 #include <string>
 
+/*
+  Error checking methods
+  
+  If Check or Assert evaluate to false, they throw a runtime
+  error and give a description of the error
+*/
+
+// Functions to easily print check values
 namespace ch_ns
 {
     using std::string;

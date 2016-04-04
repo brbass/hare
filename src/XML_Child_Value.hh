@@ -15,7 +15,16 @@
 using std::string;
 using std::vector;
 
-// helper functions
+/*
+  Helper functions for pugixml parser
+
+  Automatically converts values to desired format and ensures
+  that they exist
+*/
+
+/*
+  Helper functions
+*/
 
 template<class T> void 
 string_to_vector(string const &data_string,
@@ -36,7 +45,9 @@ vector_to_string(string &data_string,
     data_string = oss.str();
 }
 
-// child value
+/*
+  Get a child value from a certain node
+*/
 
 template<typename T> T 
 child_value(pugi::xml_node &node, 
@@ -74,8 +85,9 @@ child_value<double> (pugi::xml_node &node,
     return stof(child_value<string>(node, description, required));
 }
 
-// child vector
-
+/*
+  Get a child vector from a certain node
+*/
 template<typename T> vector<T> 
 child_vector(pugi::xml_node &node,
              string description, 
@@ -92,8 +104,9 @@ child_vector(pugi::xml_node &node,
     return value;
 }
 
-// append child
-
+/*
+  Append a child value to a certain node
+*/
 template<typename T> void
 append_child(pugi::xml_node &node,
              T data,
@@ -110,6 +123,9 @@ append_child(pugi::xml_node &node,
     child.append_child(pugi::node_pcdata).set_value(data_string.c_str());
 }
 
+/*
+  Append a child vector to a certain node
+*/
 template<typename T> void
 append_child(pugi::xml_node &node,
              vector<T> const &data,

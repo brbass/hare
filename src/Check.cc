@@ -2,6 +2,11 @@
 #include <stdexcept>
 #include <string>
 
+/*
+  Error checking methods
+  
+  See Check.hh for documentation
+*/
 namespace ch_ns
 {
     using namespace std;

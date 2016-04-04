@@ -543,6 +543,9 @@ void gauss_legendre_tbl(int n, double* x, double* w, double eps)
     return;
 }
 
+/*
+  Added function to give the results in a decent format
+*/
 void gauss_legendre_vec(int n, std::vector<double> &ordinates, std::vector<double> &weights)
 {
     if (n % 2 == 0)

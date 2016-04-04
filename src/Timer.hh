@@ -3,6 +3,12 @@
 
 #include <chrono>
 
+/*
+  Allow simple timing
+
+  See Timer.cc for full documentation
+*/
+
 class Timer
 {
 private:

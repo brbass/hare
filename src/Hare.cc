@@ -5,6 +5,9 @@
 
 using namespace std;
 
+/* 
+   Driver for finite difference code
+*/
 int main(int argc, char** argv)
 {
     if (argc != 2)

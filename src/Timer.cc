@@ -9,6 +9,11 @@
 using namespace std;
 using namespace std::chrono;
 
+/* 
+   Allow simple timing
+*/
+
+// Create timer
 Timer::
 Timer()
 {
@@ -16,6 +21,7 @@ Timer()
     timed_ = false;
 }
 
+// Start timer
 void Timer::
 start()
 {
@@ -28,6 +34,7 @@ start()
     going_ = true;
 }
 
+// Stop timer
 void Timer::
 stop()
 {
@@ -43,6 +50,7 @@ stop()
     elapsed_time_ = end_time_ - start_time_;
 }
 
+// Get current time
 double Timer::
 time()
 {
@@ -54,6 +62,7 @@ time()
     return elapsed_time_.count();
 }
 
+// Print time to console
 void Timer::
 print_time()
 {

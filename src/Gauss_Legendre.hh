@@ -87,6 +87,9 @@ double gauss_legendre_2D_cube(int n, double (*f)(double,double,void*), void* dat
 */
 void gauss_legendre_tbl(int n, double* x, double* w, double eps);
 
+/* 
+   Added function to give results in nice format
+*/
 void gauss_legendre_vec(int n, std::vector<double> &ordinates, std::vector<double> &weights);
 
 #endif /* __GAUSS_LEGENDRE_H__ */
