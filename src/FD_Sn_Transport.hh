@@ -43,6 +43,7 @@ private:
     int p_norm_;
     int max_iterations_;
     double tolerance_;
+    double delta_tolerance_;
     bool converged_;
     int total_iterations_;
     double time_;
@@ -51,6 +52,7 @@ private:
     // Solution-dependent problem data
     vector<double> phi_;
     vector<double> phi_old_;
+    vector<double> phi_older_;
     vector<double> psi_average_;
     vector<double> psi_edge_;
     vector<double> source_;
@@ -63,7 +65,6 @@ private:
     void update_source();
     void calculate_spectral_radius();
     bool check_convergence();
-    double lp_norm(vector<double> phi);
     void sweep();
     void solve();
     

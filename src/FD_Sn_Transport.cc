@@ -89,6 +89,7 @@ parse_xml()
     
     max_iterations_ = child_value<int>(problem, "max_iterations");
     tolerance_ = child_value<double>(problem, "tolerance");
+    delta_tolerance_ = tolerance_ * tolerance_;
     p_norm_ = 2;
     number_of_boundaries_ = 2;
     number_of_cells_ = child_value<int>(problem, "number_of_cells");
@@ -142,6 +143,7 @@ parse_xml()
     
     phi_.assign(number_of_cells_, 0);
     phi_old_.assign(number_of_cells_, 0);
+    phi_older_.assign(number_of_cells_, 0);
     psi_average_.assign(number_of_cells_ * number_of_ordinates_, 0);
     psi_edge_.assign(number_of_edges_ * number_of_ordinates_ , 0);
     source_.assign(number_of_cells_, 0);
@@ -159,12 +161,14 @@ write_xml()
     pugi::xml_node data = output.append_child("data");
     pugi::xml_node solution = output.append_child("solution");
 
-    append_child(data, max_iterations_, "max_iterations");
-    append_child(data, tolerance_, "tolerance");
+    append_child(data, filename_in_, "input_filename");
+    append_child(data, filename_out_, "output_filename");
+    
     append_child(data, number_of_boundaries_, "number_of_boundaries");
     append_child(data, number_of_cells_, "number_of_cells");
     append_child(data, number_of_edges_, "number_of_edges");
     append_child(data, number_of_ordinates_, "number_of_ordinates");
+    append_child(data, number_of_regions_, "number_of_regions");
 
     append_child(data, ordinates_, "ordinates");
     append_child(data, weights_, "weights");
@@ -175,8 +179,15 @@ write_xml()
     append_child(data, sigma_s_, "sigma_s");
     append_child(data, internal_source_, "internal_source");
     
+    append_child(data, p_norm_, "p_norm");
+    append_child(data, max_iterations_, "max_iterations");
+    append_child(data, tolerance_, "tolerance");
+    append_child(data, delta_tolerance_, "delta_tolerance");
+    append_child(solution, converged_, "converged");
     append_child(solution, total_iterations_, "total_iterations");
     append_child(solution, time_, "time");
+    append_child(solution, spectral_radius_, "spectral_radius");
+    
     append_child(solution, phi_, "phi");
     append_child(solution, psi_average_, "psi", "ordinate-cell");
     append_child(solution, psi_edge_, "psi_edge", "ordinate-edge");
@@ -191,6 +202,7 @@ write_xml()
 void FD_Sn_Transport::
 update_flux()
 {
+    phi_older_ = phi_old_;
     phi_old_ = phi_;
 
     for (int i = 0; i < number_of_cells_; ++i)
@@ -226,11 +238,18 @@ update_source()
 void FD_Sn_Transport::
 calculate_spectral_radius()
 {
-    double phi_norm = lp_norm(phi_);
-    double phi_old_norm = lp_norm(phi_old_);
-    spectral_radius_.push_back(phi_norm / phi_old_norm);
+    double num = 0; // numerator
+    double den = 0; // denomintor
+    for (int i = 0; i < number_of_cells_; ++i)
+    {
+        num += pow(phi_[i] - phi_old_[i], 2) * cell_length_[i];
+        den += pow(phi_old_[i] - phi_older_[i], 2) * cell_length_[i];
+    }
+    num = sqrt(num);
+    den = sqrt(den);
+    
+    spectral_radius_.push_back(num / den);
 }
-
 
 /*
   Check whether relative error is less than tolerance
@@ -242,7 +261,7 @@ check_convergence()
     
     for (unsigned i = 0; i < number_of_cells_; ++i)
     {
-        if (abs(phi_[i] - phi_old_[i]) / abs(phi_old_[i]) > tolerance_)
+        if (abs(phi_[i] - phi_old_[i]) / (abs(phi_old_[i]) + delta_tolerance_) > tolerance_)
         {
             return false;
         }
@@ -251,23 +270,6 @@ check_convergence()
     converged_ = true;
     
     return true;
-}
-
-/*
-  Calculate the L_p norm of phi
-*/
-double FD_Sn_Transport::
-lp_norm(vector<double> phi)
-{
-    Check(phi.size() == number_of_cells_);
-    
-    double sum = 0;
-    for (unsigned i = 0; i < number_of_cells_; ++i)
-    {
-        sum += pow(phi[i], p_norm_) * cell_length_[i];
-    }
-    
-    return pow(sum, 1. / static_cast<double>(p_norm_));
 }
 
 /* 

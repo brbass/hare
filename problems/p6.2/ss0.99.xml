@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<input>
+  <problem>
+    <max_iterations>5000</max_iterations>
+    <tolerance>1e-6</tolerance>
+    <number_of_cells>50</number_of_cells>
+    <number_of_ordinates>8</number_of_ordinates>
+  </problem>
+
+  <boundary>
+    <alpha>0.0 1.0</alpha>
+    <source>0.0 0.0</source>
+  </boundary>
+  
+  <regions>
+    <number_of_regions>1</number_of_regions>
+    <region>
+      <cell_length>0.2</cell_length>
+      <number_of_cells>50</number_of_cells>
+      <sigma_t>1.0</sigma_t>
+      <sigma_s>0.99</sigma_s>
+      <internal_source>0.1</internal_source>
+    </region>
+  </regions>
+</input>
