@@ -9,8 +9,8 @@
   </problem>
 
   <boundary>
-    <alpha>0.0 0.0</alpha>
-    <source>0.0 0.0</source>
+    <alpha>0.0 1.0</alpha>
+    <source>1.0 0.0</source>
   </boundary>
   
   <regions>
@@ -19,14 +19,14 @@
       <cell_length>0.1</cell_length>
       <number_of_cells>10</number_of_cells>
       <sigma_t>1.0</sigma_t>
-      <sigma_s>0.1</sigma_s>
+      <sigma_s>0.84</sigma_s>
       <internal_source>1.0</internal_source>
     </region>
     <region>
       <number_of_cells>10</number_of_cells>
-      <cell_length>0.1</cell_length>
+      <cell_length>0.2</cell_length>
       <sigma_t>2.0</sigma_t>
-      <sigma_s>0.2</sigma_s>
+      <sigma_s>1.9</sigma_s>
       <internal_source>0.0</internal_source>
     </region>
   </regions>

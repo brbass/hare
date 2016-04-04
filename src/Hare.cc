@@ -16,6 +16,4 @@ int main(int argc, char** argv)
     string filename = argv[1];
     
     FD_Sn_Transport transport(filename);
-
-    transport.solve();
 }

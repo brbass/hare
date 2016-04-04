@@ -27,6 +27,7 @@ private:
     int number_of_cells_;
     int number_of_edges_;
     int number_of_ordinates_;
+    int number_of_regions_;
 
     vector<double> ordinates_;
     vector<double> weights_;
@@ -55,8 +56,7 @@ private:
     void update_source();
     void calculate_spectral_radius();
     bool check_convergence();
-    double lp_norm(vector<double> phi,
-                   int p = p_norm_);
+    double lp_norm(vector<double> phi);
     void sweep();
     void solve();
     

@@ -14,6 +14,9 @@ namespace ch_ns
         cerr << condition;
         cerr << "\" failed on line";
         cerr << line;
+        cerr << " of \"";
+        cerr << file;
+        cerr << "\"";
         cerr << endl;
     
         throw runtime_error("check");
@@ -30,6 +33,9 @@ namespace ch_ns
         cerr << message;
         cerr << "\" on line ";
         cerr << line;
+        cerr << " of \"";
+        cerr << file;
+        cerr << "\"";
         cerr << endl;
     
         throw runtime_error("check");

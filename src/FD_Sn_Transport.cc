@@ -1,5 +1,6 @@
 #include "FD_Sn_Transport.hh"
 
+#include <cmath>
 #include <iostream>
 #include <iterator>
 #include <sstream>
@@ -10,6 +11,8 @@
 #include "Gauss_Legendre.hh"
 #include "XML_Child_Value.hh"
 #include "Timer.hh"
+
+using namespace std;
 
 /*
   Create and solve finite difference Sn equations for
@@ -41,19 +44,19 @@ FD_Sn_Transport(string filename_in):
 void FD_Sn_Transport::
 check_class_invariants()
 {
-    Insist(number_of_edges_ == number_of_cells_ + 1);
-    Insist(ordinates_.size() == number_of_ordinates_);
-    Insist(weights_.size() == number_of_ordinates_);
-    Insist(boundary_source_.size() == number_of_boundaries_);
-    Insist(alpha_.size() == number_of_boundaries_);
-    Insist(cell_length_.size() == number_of_cells_);
-    Insist(sigma_t_.size() == number_of_cells_);
-    Insist(internal_source_.size() == number_of_cells_);
-    Insist(spectral_radius_.size() == total_iterations_);
-    Insist(phi_average_.size() == number_of_cells_);
-    Insist(psi_average_.size() == number_of_cells_ * number_of_ordinates_);
-    Insist(psi_edge_.size() == number_of_edges_ * number_of_ordinates_);
-    Insist(source_.size() == number_of_cells_);
+    Assert(number_of_edges_ == number_of_cells_ + 1);
+    Assert(ordinates_.size() == number_of_ordinates_);
+    Assert(weights_.size() == number_of_ordinates_);
+    Assert(boundary_source_.size() == number_of_boundaries_);
+    Assert(alpha_.size() == number_of_boundaries_);
+    Assert(cell_length_.size() == number_of_cells_);
+    Assert(sigma_t_.size() == number_of_cells_);
+    Assert(internal_source_.size() == number_of_cells_);
+    Assert(spectral_radius_.size() == total_iterations_);
+    Assert(phi_.size() == number_of_cells_);
+    Assert(psi_average_.size() == number_of_cells_ * number_of_ordinates_);
+    Assert(psi_edge_.size() == number_of_edges_ * number_of_ordinates_);
+    Assert(source_.size() == number_of_cells_);
 }
 
 /*
@@ -64,13 +67,13 @@ parse_xml()
 {
     // The output filename will be filename-out.xml
     
-    filename_out_ = filename_in_.substr(0, filename.find_last_of(".")) + "-out.xml";
+    filename_out_ = filename_in_.substr(0, filename_in_.find_last_of(".")) + "-out.xml";
 
     // Open input document and parse
     
     pugi::xml_document doc;
     
-    if (!doc.load_file(filename.c_str()))
+    if (!doc.load_file(filename_in_.c_str()))
     {
         AssertMsg(false, "could not open document");
     }
@@ -79,8 +82,8 @@ parse_xml()
     
     pugi::xml_node input = doc.child("input");
     pugi::xml_node problem = input.child("problem");
-    pugi::xml_node boundary = problem.child("boundary");
-    pugi::xml_node regions = problem.child("regions");
+    pugi::xml_node boundary = input.child("boundary");
+    pugi::xml_node regions = input.child("regions");
 
     // Parse global problem data
     
@@ -102,7 +105,7 @@ parse_xml()
     
     // Parse boundary data
     
-    boundary_sources_ = child_vector<double>(boundary, "sources", number_of_boundaries_);
+    boundary_source_ = child_vector<double>(boundary, "source", number_of_boundaries_);
     alpha_ = child_vector<double>(boundary, "alpha", number_of_boundaries_);
     
     // Parse region (cellwise) data
@@ -128,14 +131,14 @@ parse_xml()
         cell_sum += region_cells;
         region_sum += 1;
     }
-    Check(cell_sum == number_of_cells);
-    Check(region_sum == number_of_regions);
+    Check(cell_sum == number_of_cells_);
+    Check(region_sum == number_of_regions_);
 
     // Set initial values of solution data
 
     total_iterations_ = 0;
     time_ = 0;
-    spectral_radius.resize(0);
+    spectral_radius_.resize(0);
     
     phi_.assign(number_of_cells_, 0);
     phi_old_.assign(number_of_cells_, 0);
@@ -147,7 +150,8 @@ parse_xml()
 /*
   Output data to xml file
 */
-void write_xml()
+void FD_Sn_Transport::
+write_xml()
 {
     pugi::xml_document doc;
 
@@ -253,17 +257,17 @@ check_convergence()
   Calculate the L_p norm of phi
 */
 double FD_Sn_Transport::
-lp_norm(vector<double> phi, int p)
+lp_norm(vector<double> phi)
 {
     Check(phi.size() == number_of_cells_);
     
     double sum = 0;
     for (unsigned i = 0; i < number_of_cells_; ++i)
     {
-        sum += pow(phi[i], 2) * cell_length_[i];
+        sum += pow(phi[i], p_norm_) * cell_length_[i];
     }
     
-    return pow(sum, 1. / static_cast<double>(p));
+    return pow(sum, 1. / static_cast<double>(p_norm_));
 }
 
 /* 
@@ -278,7 +282,7 @@ sweep()
 
         for (int o = number_of_ordinates_ / 2; o < number_of_ordinates_; ++o)
         {
-            int k1 = (number_of_ordinates - 1 - o) + number_of_ordinates_ * i;
+            int k1 = (number_of_ordinates_ - 1 - o) + number_of_ordinates_ * i;
             int k2 = o + number_of_ordinates_ * i;
             
             psi_edge_[k2] = boundary_source_[0] + psi_edge_[k1] * alpha_[0];
@@ -309,7 +313,7 @@ sweep()
 
         for (int o = 0; o < number_of_ordinates_ / 2; ++o)
         {
-            int k1 = (number_of_ordinates - 1 - o) + number_of_ordinates_ * (i + 1);
+            int k1 = (number_of_ordinates_ - 1 - o) + number_of_ordinates_ * (i + 1);
             int k2 = o + number_of_ordinates_ * (i + 1);
             
             psi_edge_[k2] = boundary_source_[1] + psi_edge_[k1] * alpha_[1];
