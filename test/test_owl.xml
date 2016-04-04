@@ -16,8 +16,8 @@
     <geometry>slab</geometry>
     
     <boundary>
-      <alpha>0.0 1.0</alpha>
-      <sources>1.0 0.0</sources>
+      <alpha>1.0 0.0</alpha>
+      <sources>0.0 1.0</sources>
     </boundary>
     
     <materials>
@@ -25,15 +25,15 @@
       <material name="fuel">
         <internal_source>1.0</internal_source>
         <sigma_t>1.0</sigma_t>
-        <sigma_s>0.84</sigma_s>
+        <sigma_s>0.1</sigma_s>
         <nu>0.0</nu>
         <sigma_f>0</sigma_f>
         <chi>0.0</chi>
       </material>
       <material name="moderator">
-        <internal_source>0.0</internal_source>
-        <sigma_t>2.0</sigma_t>
-        <sigma_s>1.9</sigma_s>
+        <internal_source>1.0</internal_source>
+        <sigma_t>1.0</sigma_t>
+        <sigma_s>0.84</sigma_s>
         <nu>0.0</nu>
         <sigma_f>0.0</sigma_f>
         <chi>0.0</chi>

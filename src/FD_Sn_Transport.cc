@@ -88,7 +88,7 @@ parse_xml()
     // Parse global problem data
     
     max_iterations_ = child_value<int>(problem, "max_iterations");
-    tolerance_ = child_value<int>(problem, "tolerance");
+    tolerance_ = child_value<double>(problem, "tolerance");
     p_norm_ = 2;
     number_of_boundaries_ = 2;
     number_of_cells_ = child_value<int>(problem, "number_of_cells");
@@ -299,7 +299,7 @@ sweep()
             int k2 = o + number_of_ordinates_ * (i + 1);
 
             double t1 = (ordinates_[o] - 0.5 * sigma_t_[i] * cell_length_[i]) * psi_edge_[k1];
-            double t2 = 0.5 * source_[i] * cell_length_[i];
+            double t2 = source_[i] * cell_length_[i];
             double t3 = ordinates_[o] + 0.5 * sigma_t_[i] * cell_length_[i];
             
             psi_edge_[k2] = (t1 + t2) / t3;
@@ -329,7 +329,7 @@ sweep()
             int k2 = o + number_of_ordinates_ * (i + 1);
 
             double t1 = (-ordinates_[o] - 0.5 * sigma_t_[i] * cell_length_[i]) * psi_edge_[k2];
-            double t2 = 0.5 * source_[i] * cell_length_[i];
+            double t2 = source_[i] * cell_length_[i];
             double t3 = -ordinates_[o] + 0.5 * sigma_t_[i] * cell_length_[i];
             
             psi_edge_[k1] = (t1 + t2) / t3;
