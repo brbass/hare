@@ -46,11 +46,33 @@ for i, filename in enumerate(filenames):
              # marker=shape, markerfacecolor='None',
              # markeredgecolor=color, markeredgewidth=1, 
              label=label)
-plt.xlabel(r"")
-plt.ylabel(r"")
+plt.xlabel(r"$x$")
+plt.ylabel(r"$\phi{av}$")
 plt.grid(True)
 plt.legend(fontsize=12, loc='upper left')
 plt.tight_layout()
 plt.savefig("p6.2.pdf")
+plt.close()
+
+values = ["{}.0".format(i) for i in [5,6,7,8,9]]
+filenames = ["../problems/p7.1/z{}-out.xml".format(i) for i in [5,6,7,8,9]]
+
+plt.figure(1)
+for i, filename in enumerate(filenames):
+    x, phi, spec = get_data(filename)
+    color = next(colors)
+    shape = next(shapes)
+    label = r"$Z_0 = {},\ \rho\approx{}$".format(values[i], round(spec, 3))
+    plt.plot(x, phi,
+             linestyle='solid', color=color,
+             # marker=shape, markerfacecolor='None',
+             # markeredgecolor=color, markeredgewidth=1, 
+             label=label)
+plt.xlabel(r"$x$")
+plt.ylabel(r"$\phi_{av}$")
+plt.grid(True)
+plt.legend(fontsize=12, loc='upper left')
+plt.tight_layout()
+plt.savefig("p7.1.pdf")
 plt.close()
     

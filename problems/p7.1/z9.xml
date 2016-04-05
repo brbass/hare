@@ -5,7 +5,7 @@
     <max_iterations>5000</max_iterations>
     <tolerance>1e-6</tolerance>
     <number_of_cells>100</number_of_cells>
-    <number_of_ordinates>8</number_of_ordinates>
+    <number_of_ordinates>16</number_of_ordinates>
   </problem>
 
   <boundary>
